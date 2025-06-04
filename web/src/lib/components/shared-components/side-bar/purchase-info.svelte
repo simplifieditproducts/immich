@@ -74,9 +74,9 @@
   });
 </script>
 
-{#if isOpen}
+<!-- {#if isOpen}
   <LicenseModal onClose={() => (isOpen = false)} />
-{/if}
+{/if} -->
 
 <!-- TODO: We could repurpose this modal for our own subscription purchase offers. -->
  <!-- I've commented out the "Buy Immich" button that appears in the bottom-left. -->

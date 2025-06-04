@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { NODE_VERSION } from '$env/static/private';
   import Icon from '$lib/components/elements/icon.svelte';
   import { modalManager } from '$lib/managers/modal-manager.svelte';
   import ServerAboutModal from '$lib/modals/ServerAboutModal.svelte';
@@ -31,7 +32,7 @@
     userInteraction.aboutInfo = info;
     userInteraction.versions = versions;
   });
-  let isMain = $derived(info?.sourceRef === 'main' && info.repository === 'immich-app/immich');
+  //let isMain = $derived(info?.sourceRef === 'main' && info.repository === 'immich-app/immich');
   let version = $derived(
     $serverVersion ? `v${$serverVersion.major}.${$serverVersion.minor}.${$serverVersion.patch}` : null,
   );
@@ -59,11 +60,13 @@
         onclick={() => info && modalManager.show(ServerAboutModal, { versions, info })}
         class="dark:text-immich-gray flex gap-1"
       >
-        {#if isMain}
+        <!-- Hide a warning icon that would otherwise appear if we're not on an official Immich release version. -->
+        <!-- {#if isMain}
           <Icon path={mdiAlert} size="1.5em" color="#ffcc4d" /> {info?.sourceRef}
         {:else}
           {version}
-        {/if}
+        {/if} -->
+        {version}
       </button>
     {:else}
       <p class="text-red-500">{$t('unknown')}</p>

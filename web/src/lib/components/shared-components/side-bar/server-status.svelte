@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { NODE_VERSION } from '$env/static/private';
-  import Icon from '$lib/components/elements/icon.svelte';
   import { modalManager } from '$lib/managers/modal-manager.svelte';
   import ServerAboutModal from '$lib/modals/ServerAboutModal.svelte';
   import { userInteraction } from '$lib/stores/user.svelte';

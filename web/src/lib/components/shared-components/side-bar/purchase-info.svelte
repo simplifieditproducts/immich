@@ -78,7 +78,9 @@
   <LicenseModal onClose={() => (isOpen = false)} />
 {/if}
 
-<div class="hidden md:block license-status pl-4 text-sm">
+<!-- TODO: We could repurpose this modal for our own subscription purchase offers. -->
+ <!-- I've commented out the "Buy Immich" button that appears in the bottom-left. -->
+<!-- <div class="hidden md:block license-status pl-4 text-sm">
   {#if $isPurchased && $preferences.purchase.showSupportBadge}
     <button
       onclick={() => goto(`${AppRoute.USER_SETTINGS}?isOpen=user-purchase-settings`)}
@@ -117,7 +119,7 @@
       </div>
     </button>
   {/if}
-</div>
+</div> -->
 
 <Portal target="body">
   {#if showMessage}

@@ -27,6 +27,8 @@ class FacialRecognitionSettings(BaseModel):
 class PreloadModelData(BaseModel):
     clip_fallback: str | None = os.getenv("MACHINE_LEARNING_PRELOAD__CLIP", None)
     facial_recognition_fallback: str | None = os.getenv("MACHINE_LEARNING_PRELOAD__FACIAL_RECOGNITION", None)
+    print(f"MACHINE_LEARNING_PRELOAD__CLIP: {clip_fallback}")
+
     if clip_fallback is not None:
         os.environ["MACHINE_LEARNING_PRELOAD__CLIP__TEXTUAL"] = clip_fallback
         os.environ["MACHINE_LEARNING_PRELOAD__CLIP__VISUAL"] = clip_fallback

@@ -55,6 +55,8 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
         )
     )
 
+    log.info(f"settings.preload.clip is set to {settings.preload.clip}")
+
     try:
         if settings.request_threads > 0:
             # asyncio is a huge bottleneck for performance, so we use a thread pool to run blocking code

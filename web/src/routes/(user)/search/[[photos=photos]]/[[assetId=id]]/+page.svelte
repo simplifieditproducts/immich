@@ -153,7 +153,7 @@
   // eslint-disable-next-line svelte/valid-prop-names-in-kit-pages
   export const loadNextPage = async (force?: boolean) => {
     if (!nextPage || searchResultAssets.length >= MAX_ASSET_COUNT) {
-      console.error("breakpoint1")
+      console.error("breakpoint1 with nextPage: ", nextPage)
       return;
     }
     if (isLoading && !force) {

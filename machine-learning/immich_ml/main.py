@@ -50,7 +50,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
     global thread_pool
     log.info(
         (
-            "Created in-memory cachezzz with unloading "
+            "Created in-memory cache with unloading "
             f"{f'after {settings.model_ttl}s of inactivity' if settings.model_ttl > 0 else 'disabled'}."
         )
     )

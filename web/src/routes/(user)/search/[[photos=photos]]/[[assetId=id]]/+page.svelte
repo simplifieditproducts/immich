@@ -49,6 +49,9 @@
   import { tick } from 'svelte';
   import { t } from 'svelte-i18n';
 
+  let hasActivatedPagination = $state(false);
+  const INITIAL_ASSET_LIMIT = 10;
+
   const MAX_ASSET_COUNT = 5000;
   let { isViewing: showAssetViewer } = assetViewingStore;
   const viewport: Viewport = $state({ width: 0, height: 0 });
@@ -140,6 +143,7 @@
   };
 
   async function onSearchQueryUpdate() {
+    hasActivatedPagination = false;
     nextPage = 1;
     searchResultAssets = [];
     searchResultAlbums = [];
@@ -369,13 +373,31 @@
   <section id="search-content">
     {#if searchResultAssets.length > 0}
       <GalleryViewer
-        assets={searchResultAssets}
+        assets={hasActivatedPagination ? searchResultAssets : searchResultAssets.slice(0, INITIAL_ASSET_LIMIT)}
         {assetInteraction}
         onIntersected={loadNextPage}
         showArchiveIcon={true}
         {viewport}
         pageHeaderOffset={54}
       />
+
+    {#if (!hasActivatedPagination && searchResultAssets.length > INITIAL_ASSET_LIMIT) || (hasActivatedPagination && nextPage && !isLoading)}
+      <div class="flex justify-center py-8">
+        <button
+          class="bg-immich-primary dark:bg-immich-dark-primary text-white dark:text-black font-medium px-6 py-2 rounded-lg shadow-md hover:brightness-110 transition"
+          on:click={() => {
+            if (!hasActivatedPagination) {
+              hasActivatedPagination = true;
+            } else {
+              loadNextPage();
+            }
+          }}
+        >
+          {$t('Show More')}
+        </button>
+      </div>
+    {/if}
+
     {:else if !isLoading}
       <div class="flex min-h-[calc(66vh-11rem)] w-full place-content-center items-center dark:text-white">
         <div class="flex flex-col content-center items-center text-center">

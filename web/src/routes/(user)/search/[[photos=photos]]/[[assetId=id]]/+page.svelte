@@ -160,6 +160,7 @@
       console.error("breakpoint2")
       return;
     }
+    
     isLoading = true;
 
     console.error("breakpoint3")
@@ -379,7 +380,11 @@
       <GalleryViewer
         assets={hasActivatedPagination ? searchResultAssets : searchResultAssets.slice(0, INITIAL_ASSET_LIMIT)}
         {assetInteraction}
-        onIntersected={loadNextPage}
+        onIntersected={() => {
+          if (hasActivatedPagination) {
+            loadNextPage();
+          }
+        }}
         showArchiveIcon={true}
         {viewport}
         pageHeaderOffset={54}

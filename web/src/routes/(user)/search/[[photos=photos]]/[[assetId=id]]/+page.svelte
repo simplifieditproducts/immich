@@ -385,10 +385,9 @@
         assets={hasActivatedPagination ? searchResultAssets : searchResultAssets.slice(0, INITIAL_ASSET_LIMIT)}
         {assetInteraction}
         onIntersected={() => {
+          console.error("onIntersected was called with hasActivatedPagination: ", hasActivatedPagination);
           if (hasActivatedPagination) {
             loadNextPage();
-          } else {
-            console.error("`onIntersected` was called with hasActivatedPagination == false");
           }
         }}
         showArchiveIcon={true}

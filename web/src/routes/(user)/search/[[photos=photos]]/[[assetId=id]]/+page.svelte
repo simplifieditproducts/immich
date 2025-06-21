@@ -194,18 +194,6 @@
     }
   };
 
-  async function onShowMoreClick() {
-    if (hasActivatedPagination) {
-      await tick(); // Wait for DOM update
-      await loadNextPage();
-    } else {
-      hasActivatedPagination = true;
-      await tick(); // Wait for DOM update
-      // Optional: maybe call loadNextPage() manually here too
-      await loadNextPage();
-    }
-  };
-
   function getHumanReadableDate(dateString: string) {
     const date = parseUtcDate(dateString).startOf('day');
     return date.toLocaleString(
@@ -394,12 +382,14 @@
   <section id="search-content">
     {#if searchResultAssets.length > 0}
       <GalleryViewer
-        assets={hasActivatedPagination ? searchResultAssets : searchResultAssets.slice(0, INITIAL_ASSET_LIMIT)}
+        assets={searchResultAssets}
         {assetInteraction}
         onIntersected={() => {
-          console.error("onIntersected was called with hasActivatedPagination: ", hasActivatedPagination);
+          console.error("onIntersected was called with hasActivatedPagination: ", hasActivatedPagination)
           if (hasActivatedPagination) {
             loadNextPage();
+          } else {
+            console.error("`onIntersected` was called with hasActivatedPagination == false");
           }
         }}
         showArchiveIcon={true}
@@ -410,7 +400,13 @@
     {#if (!hasActivatedPagination && searchResultAssets.length > INITIAL_ASSET_LIMIT) || (hasActivatedPagination && nextPage && !isLoading)}
       <div class="flex justify-center py-8">
         <button class="bg-immich-primary dark:bg-immich-dark-primary text-white dark:text-black font-medium px-6 py-2 rounded-lg shadow-md hover:brightness-110 transition"
-          on:click={onShowMoreClick}
+          on:click={() => {
+            if (hasActivatedPagination) {
+              loadNextPage();
+            } else {
+              hasActivatedPagination = true;
+            }
+          }}
         >
           {$t('Show More')}
         </button>

@@ -196,6 +196,7 @@
 
   async function onShowMoreClick() {
     if (hasActivatedPagination) {
+      await tick(); // Wait for DOM update
       await loadNextPage();
     } else {
       hasActivatedPagination = true;

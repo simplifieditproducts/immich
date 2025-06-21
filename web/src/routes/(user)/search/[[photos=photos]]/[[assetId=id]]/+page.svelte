@@ -194,6 +194,16 @@
     }
   };
 
+  async function onShowMoreClick() {
+    if (hasActivatedPagination) {
+      await loadNextPage();
+    } else {
+      hasActivatedPagination = true;
+      await tick(); // Wait for DOM update
+      // Optional: maybe call loadNextPage() manually here too
+    }
+  };
+
   function getHumanReadableDate(dateString: string) {
     const date = parseUtcDate(dateString).startOf('day');
     return date.toLocaleString(
@@ -398,14 +408,7 @@
     {#if (!hasActivatedPagination && searchResultAssets.length > INITIAL_ASSET_LIMIT) || (hasActivatedPagination && nextPage && !isLoading)}
       <div class="flex justify-center py-8">
         <button class="bg-immich-primary dark:bg-immich-dark-primary text-white dark:text-black font-medium px-6 py-2 rounded-lg shadow-md hover:brightness-110 transition"
-          on:click={() => {
-            loadNextPage();
-            // if (hasActivatedPagination) {
-            //   loadNextPage();
-            // } else {
-            //   hasActivatedPagination = true;
-            // }
-          }}
+          on:click={onShowMoreClick}
         >
           {$t('Show More')}
         </button>

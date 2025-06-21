@@ -201,6 +201,7 @@
       hasActivatedPagination = true;
       await tick(); // Wait for DOM update
       // Optional: maybe call loadNextPage() manually here too
+      await loadNextPage();
     }
   };
 

@@ -15,6 +15,7 @@
   import DeleteAssets from '$lib/components/photos-page/actions/delete-assets.svelte';
   import DownloadAction from '$lib/components/photos-page/actions/download-action.svelte';
   import FavoriteAction from '$lib/components/photos-page/actions/favorite-action.svelte';
+  import SetVisibilityAction from '$lib/components/photos-page/actions/set-visibility-action.svelte';
   import TagAction from '$lib/components/photos-page/actions/tag-action.svelte';
   import AssetSelectControlBar from '$lib/components/photos-page/asset-select-control-bar.svelte';
   import ButtonContextMenu from '$lib/components/shared-components/context-menu/button-context-menu.svelte';
@@ -25,7 +26,7 @@
   import { AppRoute, QueryParameter } from '$lib/constants';
   import { AssetInteraction } from '$lib/stores/asset-interaction.svelte';
   import { assetViewingStore } from '$lib/stores/asset-viewing.store';
-  import type { TimelineAsset, Viewport } from '$lib/stores/assets-store.svelte';
+  import { AssetStore, type TimelineAsset, type Viewport } from '$lib/stores/assets-store.svelte';
   import { lang, locale } from '$lib/stores/preferences.store';
   import { featureFlags } from '$lib/stores/server-config.store';
   import { preferences } from '$lib/stores/user.store';
@@ -47,9 +48,6 @@
   import { mdiArrowLeft, mdiDotsVertical, mdiImageOffOutline, mdiPlus, mdiSelectAll } from '@mdi/js';
   import { tick } from 'svelte';
   import { t } from 'svelte-i18n';
-
-  let hasActivatedPagination = $state(false);
-  const INITIAL_ASSET_LIMIT = 10;
 
   const MAX_ASSET_COUNT = 5000;
   let { isViewing: showAssetViewer } = assetViewingStore;
@@ -81,6 +79,8 @@
       handlePromiseError(onSearchQueryUpdate());
     });
   });
+
+  let assetStore = new AssetStore();
 
   const onEscape = () => {
     if ($showAssetViewer) {
@@ -128,12 +128,18 @@
     const assetIdSet = new Set(assetIds);
     searchResultAssets = searchResultAssets.filter((asset: TimelineAsset) => !assetIdSet.has(asset.id));
   };
+
+  const handleSetVisibility = (assetIds: string[]) => {
+    assetStore.removeAssets(assetIds);
+    assetInteraction.clearMultiselect();
+    onAssetDelete(assetIds);
+  };
+
   const handleSelectAll = () => {
     assetInteraction.selectAssets(searchResultAssets);
   };
 
   async function onSearchQueryUpdate() {
-    hasActivatedPagination = false;
     nextPage = 1;
     searchResultAssets = [];
     searchResultAlbums = [];
@@ -142,22 +148,13 @@
 
   // eslint-disable-next-line svelte/valid-prop-names-in-kit-pages
   export const loadNextPage = async (force?: boolean) => {
-    if (!nextPage) {
-      console.error("breakpoint1 with nextPage: ", nextPage)
-      return;
-    }
-    if (searchResultAssets.length >= MAX_ASSET_COUNT) {
-      console.error("breakpoint2 with searchResultAssets: ", searchResultAssets)
+    if (!nextPage || searchResultAssets.length >= MAX_ASSET_COUNT) {
       return;
     }
     if (isLoading && !force) {
-      console.error("breakpoint3")
       return;
     }
-    
     isLoading = true;
-
-    console.error("breakpoint4 - Loading next page")
 
     const searchDto: SearchTerms = {
       page: nextPage,
@@ -374,29 +371,11 @@
       <GalleryViewer
         assets={searchResultAssets}
         {assetInteraction}
-        onIntersected={() => {
-          console.error("onIntersected was called with hasActivatedPagination: ", hasActivatedPagination)
-          if (hasActivatedPagination) {
-            loadNextPage();
-          }
-        }}
+        onIntersected={loadNextPage}
         showArchiveIcon={true}
         {viewport}
         pageHeaderOffset={54}
       />
-
-    {#if (!hasActivatedPagination && searchResultAssets.length > INITIAL_ASSET_LIMIT) || (hasActivatedPagination && nextPage && !isLoading)}
-      <div class="flex justify-center py-8">
-        <button class="bg-immich-primary dark:bg-immich-dark-primary text-white dark:text-black font-medium px-6 py-2 rounded-lg shadow-md hover:brightness-110 transition"
-          on:click={() => {
-              loadNextPage();
-          }}
-        >
-          {$t('Show More')}
-        </button>
-      </div>
-    {/if}
-
     {:else if !isLoading}
       <div class="flex min-h-[calc(66vh-11rem)] w-full place-content-center items-center dark:text-white">
         <div class="flex flex-col content-center items-center text-center">
@@ -445,6 +424,9 @@
             <ChangeDescription menuItem />
             <ChangeLocation menuItem />
             <ArchiveAction menuItem unarchive={assetInteraction.isAllArchived} />
+            {#if assetInteraction.isAllUserOwned}
+              <SetVisibilityAction menuItem onVisibilitySet={handleSetVisibility} />
+            {/if}
             {#if $preferences.tags.enabled && assetInteraction.isAllUserOwned}
               <TagAction menuItem />
             {/if}

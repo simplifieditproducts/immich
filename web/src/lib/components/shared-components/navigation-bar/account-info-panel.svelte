@@ -6,13 +6,9 @@
   import { AppRoute } from '$lib/constants';
   import { modalManager } from '$lib/managers/modal-manager.svelte';
   import AvatarEditModal from '$lib/modals/AvatarEditModal.svelte';
-  import HelpAndFeedbackModal from '$lib/modals/HelpAndFeedbackModal.svelte';
   import { user } from '$lib/stores/user.store';
-  import { userInteraction } from '$lib/stores/user.svelte';
-  import { getAboutInfo, type ServerAboutResponseDto } from '@immich/sdk';
   import { Button } from '@immich/ui';
   import { mdiCog, mdiLogout, mdiPencil, mdiWrench } from '@mdi/js';
-  import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { fade } from 'svelte/transition';
   import UserAvatar from '../user-avatar.svelte';
@@ -23,12 +19,6 @@
   }
 
   let { onLogout, onClose = () => {} }: Props = $props();
-
-  let info: ServerAboutResponseDto | undefined = $state();
-
-  onMount(async () => {
-    info = userInteraction.aboutInfo ?? (await getAboutInfo());
-  });
 </script>
 
 <div
@@ -39,7 +29,7 @@
   use:focusTrap
 >
   <div
-    class="mx-4 mt-4 flex flex-col items-center justify-center gap-4 rounded-t-3xl bg-white p-4 dark:bg-immich-dark-primary/10"
+    class="mx-4 mt-4 flex flex-col items-center justify-center gap-4 rounded-3xl bg-white p-4 dark:bg-immich-dark-primary/10"
   >
     <div class="relative">
       <UserAvatar user={$user} size="xl" />
@@ -51,10 +41,7 @@
           class="border"
           size="12"
           padding="2"
-          onclick={async () => {
-            onClose();
-            await modalManager.show(AvatarEditModal, {});
-          }}
+          onclick={() => modalManager.show(AvatarEditModal, {})}
         />
       </div>
     </div>
@@ -101,25 +88,13 @@
   </div>
 
   <div class="mb-4 flex flex-col">
-    <Button
-      class="m-1 mx-4 rounded-none rounded-b-3xl bg-white p-3 dark:bg-immich-dark-primary/10"
-      onclick={onLogout}
-      leadingIcon={mdiLogout}
-      variant="ghost"
-      color="secondary">{$t('sign_out')}</Button
-    >
-
     <button
       type="button"
-      class="text-center mt-4 underline text-xs text-immich-primary dark:text-immich-dark-primary"
-      onclick={async () => {
-        onClose();
-        if (info) {
-          await modalManager.show(HelpAndFeedbackModal, { info });
-        }
-      }}
+      class="flex w-full place-content-center place-items-center gap-2 py-3 font-medium text-gray-500 hover:bg-immich-primary/10 dark:text-gray-300"
+      onclick={onLogout}
     >
-      {$t('support_and_feedback')}
-    </button>
+      <Icon path={mdiLogout} size={24} />
+      {$t('sign_out')}</button
+    >
   </div>
 </div>

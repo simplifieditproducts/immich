@@ -3,7 +3,6 @@
   import ProgressBar from '$lib/components/shared-components/progress-bar/progress-bar.svelte';
   import SlideshowSettings from '$lib/components/slideshow-settings.svelte';
   import { ProgressBarStatus } from '$lib/constants';
-  import { modalManager } from '$lib/managers/modal-manager.svelte';
   import { SlideshowNavigation, slideshowStore } from '$lib/stores/slideshow.store';
   import { IconButton } from '@immich/ui';
   import { mdiChevronLeft, mdiChevronRight, mdiClose, mdiCog, mdiFullscreen, mdiPause, mdiPlay } from '@mdi/js';
@@ -32,6 +31,7 @@
 
   let progressBarStatus: ProgressBarStatus | undefined = $state();
   let progressBar = $state<ReturnType<typeof ProgressBar>>();
+  let showSettings = $state(false);
   let showControls = $state(true);
   let timer: NodeJS.Timeout;
   let isOverControls = $state(false);
@@ -99,11 +99,11 @@
     onNext();
   };
 
-  const onShowSettings = async () => {
-    if (document.fullscreenElement) {
+  const onSettingToggled = async () => {
+    showSettings = !showSettings;
+    if (document.fullscreenElement && showSettings) {
       await document.exitFullscreen();
     }
-    await modalManager.show(SlideshowSettings, {});
   };
 </script>
 
@@ -168,7 +168,7 @@
       shape="round"
       color="secondary"
       icon={mdiCog}
-      onclick={onShowSettings}
+      onclick={onSettingToggled}
       aria-label={$t('slideshow_settings')}
       class="text-white"
     />
@@ -184,6 +184,9 @@
       />
     {/if}
   </div>
+{/if}
+{#if showSettings}
+  <SlideshowSettings onClose={() => (showSettings = false)} />
 {/if}
 
 <ProgressBar

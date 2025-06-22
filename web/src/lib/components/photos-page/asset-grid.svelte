@@ -124,38 +124,26 @@
     scrollTo(0);
   };
 
-  const scrollToAsset = async (assetId: string) => {
-    try {
-      const bucket = await assetStore.findBucketForAsset(assetId);
-      if (bucket) {
-        const height = bucket.findAssetAbsolutePosition(assetId);
-        if (height) {
-          scrollTo(height);
-          assetStore.updateIntersections();
-          return true;
-        }
-      }
-    } catch {
-      // ignore errors - asset may not be in the store
-    }
-    return false;
-  };
-
   const completeNav = async () => {
     const scrollTarget = $gridScrollTarget?.at;
-    let scrolled = false;
     if (scrollTarget) {
-      scrolled = await scrollToAsset(scrollTarget);
+      try {
+        const bucket = await assetStore.findBucketForAsset(scrollTarget);
+        if (bucket) {
+          const height = bucket.findAssetAbsolutePosition(scrollTarget);
+          if (height) {
+            scrollTo(height);
+            assetStore.updateIntersections();
+            return;
+          }
+        }
+      } catch {
+        // ignore errors - asset may not be in the store
+      }
     }
-
-    if (!scrolled) {
-      // if the asset is not found, scroll to the top
-      scrollToTop();
-    }
+    scrollToTop();
   };
-
   beforeNavigate(() => (assetStore.suspendTransitions = true));
-
   afterNavigate((nav) => {
     const { complete } = nav;
     complete.then(completeNav, completeNav);
@@ -576,9 +564,12 @@
         return;
       }
 
-      // Select/deselect assets in range (start,end)
+      // Select/deselect assets in range (start,end]
       let started = false;
       for (const bucket of assetStore.buckets) {
+        if (bucket === startBucket) {
+          started = true;
+        }
         if (bucket === endBucket) {
           break;
         }
@@ -592,30 +583,26 @@
             }
           }
         }
-        if (bucket === startBucket) {
-          started = true;
-        }
       }
 
-      // Update date group selection in range [start,end]
+      // Update date group selection
       started = false;
       for (const bucket of assetStore.buckets) {
         if (bucket === startBucket) {
           started = true;
         }
-        if (started) {
-          // Split bucket into date groups and check each group
-          for (const dateGroup of bucket.dateGroups) {
-            const dateGroupTitle = dateGroup.groupTitle;
-            if (dateGroup.getAssets().every((a) => assetInteraction.hasSelectedAsset(a.id))) {
-              assetInteraction.addGroupToMultiselectGroup(dateGroupTitle);
-            } else {
-              assetInteraction.removeGroupFromMultiselectGroup(dateGroupTitle);
-            }
-          }
-        }
         if (bucket === endBucket) {
           break;
+        }
+
+        // Split bucket into date groups and check each group
+        for (const dateGroup of bucket.dateGroups) {
+          const dateGroupTitle = dateGroup.groupTitle;
+          if (dateGroup.getAssets().every((a) => assetInteraction.hasSelectedAsset(a.id))) {
+            assetInteraction.addGroupToMultiselectGroup(dateGroupTitle);
+          } else {
+            assetInteraction.removeGroupFromMultiselectGroup(dateGroupTitle);
+          }
         }
       }
     }

@@ -15,7 +15,6 @@ select
           inner join "memories_assets_assets" on "assets"."id" = "memories_assets_assets"."assetsId"
         where
           "memories_assets_assets"."memoriesId" = "memories"."id"
-          and "assets"."visibility" = 'timeline'
           and "assets"."deletedAt" is null
         order by
           "assets"."fileCreatedAt" asc
@@ -44,7 +43,6 @@ select
           inner join "memories_assets_assets" on "assets"."id" = "memories_assets_assets"."assetsId"
         where
           "memories_assets_assets"."memoriesId" = "memories"."id"
-          and "assets"."visibility" = 'timeline'
           and "assets"."deletedAt" is null
         order by
           "assets"."fileCreatedAt" asc
@@ -81,7 +79,6 @@ select
           inner join "memories_assets_assets" on "assets"."id" = "memories_assets_assets"."assetsId"
         where
           "memories_assets_assets"."memoriesId" = "memories"."id"
-          and "assets"."visibility" = 'timeline'
           and "assets"."deletedAt" is null
         order by
           "assets"."fileCreatedAt" asc
@@ -114,7 +111,6 @@ select
           inner join "memories_assets_assets" on "assets"."id" = "memories_assets_assets"."assetsId"
         where
           "memories_assets_assets"."memoriesId" = "memories"."id"
-          and "assets"."visibility" = 'timeline'
           and "assets"."deletedAt" is null
         order by
           "assets"."fileCreatedAt" asc

@@ -54,7 +54,6 @@
     onClickPoint?: ({ lat, lng }: { lat: number; lng: number }) => void;
     popup?: import('svelte').Snippet<[{ marker: MapMarkerResponseDto }]>;
     rounded?: boolean;
-    showSimpleControls?: boolean;
   }
 
   let {
@@ -71,7 +70,6 @@
     onClickPoint = () => {},
     popup,
     rounded = false,
-    showSimpleControls = true,
   }: Props = $props();
 
   let map: maplibregl.Map | undefined = $state();
@@ -268,15 +266,13 @@
   bind:map
 >
   {#snippet children({ map }: { map: maplibregl.Map })}
-    {#if showSimpleControls}
-      <NavigationControl position="top-left" showCompass={!simplified} />
+    <NavigationControl position="top-left" showCompass={!simplified} />
 
-      {#if !simplified}
-        <GeolocateControl position="top-left" />
-        <FullscreenControl position="top-left" />
-        <ScaleControl />
-        <AttributionControl compact={false} />
-      {/if}
+    {#if !simplified}
+      <GeolocateControl position="top-left" />
+      <FullscreenControl position="top-left" />
+      <ScaleControl />
+      <AttributionControl compact={false} />
     {/if}
 
     {#if showSettings}
@@ -289,7 +285,7 @@
       </Control>
     {/if}
 
-    {#if onOpenInMapView && showSimpleControls}
+    {#if onOpenInMapView}
       <Control position="top-right">
         <ControlGroup>
           <ControlButton onclick={() => onOpenInMapView()}>

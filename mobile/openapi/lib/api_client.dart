@@ -696,8 +696,6 @@ class ApiClient {
           return ValidateLibraryImportPathResponseDto.fromJson(value);
         case 'ValidateLibraryResponseDto':
           return ValidateLibraryResponseDto.fromJson(value);
-        case 'VersionCheckStateResponseDto':
-          return VersionCheckStateResponseDto.fromJson(value);
         case 'VideoCodec':
           return VideoCodecTypeTransformer().decode(value);
         case 'VideoContainer':

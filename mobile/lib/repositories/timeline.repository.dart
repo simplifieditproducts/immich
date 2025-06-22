@@ -72,12 +72,7 @@ class TimelineRepository extends DatabaseRepository
     Album album,
     GroupAssetsBy groupAssetByOption,
   ) {
-    final query = album.assets
-        .filter()
-        .isTrashedEqualTo(false)
-        .not()
-        .visibilityEqualTo(AssetVisibilityEnum.locked);
-
+    final query = album.assets.filter().isTrashedEqualTo(false);
     final withSortedOption = switch (album.sortOrder) {
       SortOrder.asc => query.sortByFileCreatedAt(),
       SortOrder.desc => query.sortByFileCreatedAtDesc(),

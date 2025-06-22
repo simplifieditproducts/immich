@@ -5563,38 +5563,6 @@
         ]
       }
     },
-    "/server/version-check": {
-      "get": {
-        "operationId": "getVersionCheck",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VersionCheckStateResponseDto"
-                }
-              }
-            },
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "cookie": []
-          },
-          {
-            "api_key": []
-          }
-        ],
-        "tags": [
-          "Server"
-        ]
-      }
-    },
     "/server/version-history": {
       "get": {
         "operationId": "getVersionHistory",
@@ -6856,38 +6824,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReverseGeocodingStateResponseDto"
-                }
-              }
-            },
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "cookie": []
-          },
-          {
-            "api_key": []
-          }
-        ],
-        "tags": [
-          "System Metadata"
-        ]
-      }
-    },
-    "/system-metadata/version-check-state": {
-      "get": {
-        "operationId": "getVersionCheckState",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VersionCheckStateResponseDto"
                 }
               }
             },
@@ -8196,7 +8132,7 @@
   "info": {
     "title": "Immich",
     "description": "Immich API",
-    "version": "1.134.0",
+    "version": "1.133.0",
     "contact": {}
   },
   "tags": [],
@@ -15001,23 +14937,6 @@
             "type": "array"
           }
         },
-        "type": "object"
-      },
-      "VersionCheckStateResponseDto": {
-        "properties": {
-          "checkedAt": {
-            "nullable": true,
-            "type": "string"
-          },
-          "releaseVersion": {
-            "nullable": true,
-            "type": "string"
-          }
-        },
-        "required": [
-          "checkedAt",
-          "releaseVersion"
-        ],
         "type": "object"
       },
       "VideoCodec": {

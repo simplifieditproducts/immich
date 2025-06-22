@@ -279,17 +279,12 @@
       const data = getFaceCroppedCoordinates();
       if (!data) {
         notificationController.show({
-          message: $t('error_tag_face_bounding_box'),
+          message: 'Error tagging face - cannot get bounding box coordinates',
         });
         return;
       }
 
-      const isConfirmed = await modalManager.showDialog({
-        prompt: person.name
-          ? $t('confirm_tag_face', { values: { name: person.name } })
-          : $t('confirm_tag_face_unnamed'),
-      });
-
+      const isConfirmed = await modalManager.showDialog({ prompt: `Do you want to tag this face as ${person.name}?` });
       if (!isConfirmed) {
         return;
       }

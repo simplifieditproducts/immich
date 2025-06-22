@@ -13,10 +13,8 @@ import {
   ServerVersionHistoryResponseDto,
   ServerVersionResponseDto,
 } from 'src/dtos/server.dto';
-import { VersionCheckStateResponseDto } from 'src/dtos/system-metadata.dto';
 import { Authenticated } from 'src/middleware/auth.guard';
 import { ServerService } from 'src/services/server.service';
-import { SystemMetadataService } from 'src/services/system-metadata.service';
 import { VersionService } from 'src/services/version.service';
 
 @ApiTags('Server')
@@ -24,7 +22,6 @@ import { VersionService } from 'src/services/version.service';
 export class ServerController {
   constructor(
     private service: ServerService,
-    private systemMetadataService: SystemMetadataService,
     private versionService: VersionService,
   ) {}
 
@@ -98,11 +95,5 @@ export class ServerController {
   @ApiNotFoundResponse()
   getServerLicense(): Promise<LicenseResponseDto> {
     return this.service.getLicense();
-  }
-
-  @Get('version-check')
-  @Authenticated()
-  getVersionCheck(): Promise<VersionCheckStateResponseDto> {
-    return this.systemMetadataService.getVersionCheckState();
   }
 }

@@ -88,7 +88,6 @@
         } else if (target.value !== '') {
           pinValues[index] = '';
         }
-        value = pinValues.join('').trim();
         return;
       }
       case 'ArrowLeft': {

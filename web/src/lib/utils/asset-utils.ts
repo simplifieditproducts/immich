@@ -21,7 +21,6 @@ import { navigate } from '$lib/utils/navigation';
 import {
   addAssetsToAlbum as addAssets,
   AssetVisibility,
-  bulkTagAssets,
   createStack,
   deleteAssets,
   deleteStacks,
@@ -29,6 +28,7 @@ import {
   getBaseUrl,
   getDownloadInfo,
   getStack,
+  tagAssets as tagAllAssets,
   untagAssets,
   updateAsset,
   updateAssets,
@@ -83,7 +83,9 @@ export const tagAssets = async ({
   tagIds: string[];
   showNotification?: boolean;
 }) => {
-  await bulkTagAssets({ tagBulkAssetsDto: { tagIds, assetIds } });
+  for (const tagId of tagIds) {
+    await tagAllAssets({ id: tagId, bulkIdsDto: { ids: assetIds } });
+  }
 
   if (showNotification) {
     const $t = await getFormatter();

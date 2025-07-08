@@ -37,18 +37,17 @@
   onMount(async () => {
 
     // BEGIN auto-login logic added by Gavin.
-    // To use auto-login, visit a URL of the form: `http://192.168.0.222:3000/auth/login?email=${email)&password=${percentEncodedPassword}`
-    const params = new URLSearchParams(globalThis.location.search);
-    const autoEmail = params.get('email');
-    const autoPassword = params.get('password');
+    // To use auto-login, use `window.postMessage` to pass in `email` and `password fields while opening the Immich Web UI.
+    window.addEventListener("message", (event) => {
+      const { autoEmail, autoPassword } = event.data;
+      if (!autoEmail || !autoPassword) { return };
 
-    if (autoEmail && autoPassword) {
       email = autoEmail;
       password = autoPassword;
-      console.log(`auto-login started with email: ${email} and password: ${password}`);
-      await handleLogin();
-      return;
-    }
+
+      console.log(`Auto-login started with email: ${autoEmail}`);
+      handleLogin().catch((error) => console.error("Auto-login failed", error));
+    });
     // END auto-login logic added by Gavin.
 
     if (!$featureFlags.oauth) {

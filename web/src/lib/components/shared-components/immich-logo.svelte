@@ -1,9 +1,6 @@
 <script lang="ts">
   import type { HTMLImgAttributes } from 'svelte/elements';
-  import { t } from 'svelte-i18n';
-  import logoDarkUrl from '$lib/assets/pk-logo-inline-dark.svg';
-  import logoLightUrl from '$lib/assets/pk-logo-inline-light.svg';
-  import logoNoText from '$lib/assets/pk-logo.svg';
+  import logoLightUrl from '$lib/assets/shield-logo-with-text.png';  
 
   interface Props extends HTMLImgAttributes {
     noText?: boolean;
@@ -12,10 +9,10 @@
 
   let { noText = false, draggable = false, ...rest }: Props = $props();
 
-  const logoUrl = $derived(
-    noText ? logoNoText : logoLightUrl,
-  );
-
 </script>
 
-<img src={logoUrl} alt={$t('immich_logo')} {draggable} {...rest} />
+<!-- Gavin customized this so there is only a logo in the top-left of the main UI on desktops.
+     We hide this logo on mobile devices, since the WebView already has a logo at the top.  -->
+{#if !noText}
+  <img src={logoLightUrl} alt="Shield Logo" {draggable} {...rest} />
+{/if}

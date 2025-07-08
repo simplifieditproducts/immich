@@ -7,3 +7,9 @@ Steps to run development server on a Unix-based computer:
 4) Access the instance in your web browser by using `http://localhost:3000` or `http://your-machine-ip:3000`
 
 Official instructions [here](https://immich.app/docs/developer/setup).
+
+Image assets are stored in various locations within the source code:
+- The `immich/web/src/lib/assets/` directory stores assets that are importable into Svelte. Changing any of these assets requires restarting the Docker container.
+- The `immich/web/static` directory stores static assets that are served with no processing. These are unavailable to Svelte.
+- The `immich/design` directory stores images used in `README` files.
+- The `@immich/ui` Node module stores some assets internally. 

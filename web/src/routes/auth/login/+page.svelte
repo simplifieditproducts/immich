@@ -35,6 +35,22 @@
   const onOnboarding = async () => await goto(AppRoute.AUTH_ONBOARDING);
 
   onMount(async () => {
+
+    // BEGIN auto-login logic added by Gavin.
+    // To use auto-login, visit a URL of the form: `http://192.168.0.222:3000/auth/login?email=${email)&password=${percentEncodedPassword}`
+    const params = new URLSearchParams(globalThis.location.search);
+    const autoEmail = params.get('email');
+    const autoPassword = params.get('password');
+
+    if (autoEmail && autoPassword) {
+      email = autoEmail;
+      password = autoPassword;
+      console.log(`auto-login started with email: ${email} and password: ${password}`);
+      await handleLogin();
+      return;
+    }
+    // END auto-login logic added by Gavin.
+
     if (!$featureFlags.oauth) {
       oauthLoading = false;
       return;

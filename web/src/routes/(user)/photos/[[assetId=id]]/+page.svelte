@@ -88,7 +88,8 @@
   });
 </script>
 
-<UserPageLayout hideNavbar={assetInteraction.selectionActive} showUploadButton scrollbar={false}>
+<!-- Gavin changed this to ensure the Upload Button is never visible (as we only want uploads to come from the PKC app). -->
+<UserPageLayout hideNavbar={assetInteraction.selectionActive} showUploadButton={false} scrollbar={false}>
   <AssetGrid
     enableRouting={true}
     {assetStore}

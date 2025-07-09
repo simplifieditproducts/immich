@@ -117,7 +117,8 @@
           />
         {/if}
 
-        <ThemeButton padding="2" />
+        <!-- Gavin has hidden the Theme Switch button. -->
+        <!-- <ThemeButton padding="2" /> -->
 
         <div
           use:clickOutside={{

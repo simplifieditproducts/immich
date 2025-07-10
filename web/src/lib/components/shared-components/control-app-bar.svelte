@@ -5,6 +5,7 @@
   import { mdiClose } from '@mdi/js';
   import { onDestroy, onMount, type Snippet } from 'svelte';
   import { t } from 'svelte-i18n';
+  import { mobileDevice } from '$lib/stores/mobile-device.svelte';
   import { fly } from 'svelte/transition';
   import CircleIconButton from '../elements/buttons/circle-icon-button.svelte';
 

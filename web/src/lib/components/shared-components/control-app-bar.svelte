@@ -5,6 +5,7 @@
   import { mdiClose } from '@mdi/js';
   import { onDestroy, onMount, type Snippet } from 'svelte';
   import { t } from 'svelte-i18n';
+  import { mobileDevice } from '$lib/stores/mobile-device.svelte';
   import { fly } from 'svelte/transition';
   import CircleIconButton from '../elements/buttons/circle-icon-button.svelte';
 
@@ -66,7 +67,9 @@
   let buttonClass = $derived(forceDark ? 'hover:text-immich-dark-gray' : undefined);
 </script>
 
-<div in:fly={{ y: 10, duration: 200 }} class="absolute top-0 w-full bg-transparent">
+<!-- Gavin made space around the search bar white, as it solves visual issues with image de-loading when scrolling.
+     The change Gavin made in `web/src/routes/(user)/search/[[photos=photos]]/[[assetId=id]]/+page.svelte` is related to this. -->
+<div in:fly={{ y: 10, duration: 200 }} class="absolute top-0 w-full bg-white">
   <nav
     id="asset-selection-app-bar"
     class={[
@@ -75,7 +78,7 @@
       !multiRow && 'grid-cols-[10%_80%_10%] sm:grid-cols-[25%_50%_25%]',
       'justify-between lg:grid-cols-[25%_50%_25%]',
       appBarBorder,
-      'mx-2 my-2 place-items-center rounded-lg p-2 max-md:p-0 transition-all',
+      'mx-2 mt-2 place-items-center rounded-lg p-2 max-md:p-0 transition-all',
       tailwindClasses,
       forceDark ? 'bg-immich-dark-gray! text-white' : 'bg-subtle dark:bg-immich-dark-gray',
     ]}

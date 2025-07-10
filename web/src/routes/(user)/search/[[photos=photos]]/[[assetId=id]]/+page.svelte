@@ -36,6 +36,7 @@
   import { handleError } from '$lib/utils/handle-error';
   import { isAlbumsRoute, isPeopleRoute } from '$lib/utils/navigation';
   import { toTimelineAsset } from '$lib/utils/timeline-util';
+  import { mobileDevice } from '$lib/stores/mobile-device.svelte';
   import {
     type AlbumResponseDto,
     getPerson,
@@ -368,13 +369,14 @@
   {/if}
   <section id="search-content">
     {#if searchResultAssets.length > 0}
+      <!-- Gavin changed `pageHeaderOffset` for mobile to prevent thumbnails from disappearing prematurely when scrolling. -->
       <GalleryViewer
         assets={searchResultAssets}
         {assetInteraction}
         onIntersected={loadNextPage}
         showArchiveIcon={true}
         {viewport}
-        pageHeaderOffset={54}
+        pageHeaderOffset={mobileDevice.pointerCoarse ? 86 : 54}
       />
     {:else if !isLoading}
       <div class="flex min-h-[calc(66vh-11rem)] w-full place-content-center items-center dark:text-white">

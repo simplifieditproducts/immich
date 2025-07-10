@@ -17,3 +17,5 @@ Image assets are stored in various locations within the codebase:
 These are various important files in the codebase:
 - `immich/web/src/routes/(user)/photos/[[assetId=id]]/+page.svelte` is the main photo viewer UI.
 - `immich/web/src/routes/auth/login/+page.svelte` handles the login logic.
+- `immich/web/src/routes/(user)/search/[[photos=photos]]/[[assetId=id]]/+page.svelte` is the search results UI.
+- 

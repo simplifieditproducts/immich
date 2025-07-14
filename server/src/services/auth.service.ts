@@ -206,6 +206,8 @@ export class AuthService extends BaseService {
       this.getCookieToken(headers)) as string;
     const apiKey = (headers[ImmichHeader.API_KEY] || queryParams[ImmichQuery.API_KEY]) as string;
 
+    console.log(`Calling 'validate()' with user token: ${headers[ImmichHeader.USER_TOKEN]}, session token: ${headers[ImmichHeader.SESSION_TOKEN]}, bearer token: ${this.getBearerToken(headers)}, cookie token: ${this.getCookieToken(headers)}`);
+
     if (shareKey) {
       return this.validateSharedLink(shareKey);
     }

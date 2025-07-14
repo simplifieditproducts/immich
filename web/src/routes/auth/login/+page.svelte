@@ -10,6 +10,7 @@
   import { Alert, Button, Field, Input, PasswordInput, Stack } from '@immich/ui';
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
+  import { preferences as preferences$, user as user$, resetSavedUser } from '$lib/stores/user.store';
   import type { PageData } from './$types';
 
   interface Props {
@@ -26,7 +27,7 @@
   let oauthLoading = $state(true);
 
   const onSuccess = async (user: LoginResponseDto) => {
-    console.log(data.continueUrl);
+    console.log(`Calling 'onSuccess' with continueUrl: ${data.continueUrl}`);
     await goto(data.continueUrl, { invalidateAll: true });
     eventManager.emit('auth.login', user);
   };
@@ -36,16 +37,20 @@
 
   onMount(async () => {
 
+    console.log(`Calling 'onMount() within 'web/src/routes/auth/login/+page.svelte'`);
+
     // BEGIN auto-login logic added by Gavin.
-    // To use auto-login, use `window.postMessage` to pass in `email` and `password fields while opening the Immich Web UI.
+    // To use auto-login, use `window.postMessage` to pass in `email` and `password` fields while opening the Immich Web UI.
     window.addEventListener("message", (event) => {
-      const { autoEmail, autoPassword } = event.data;
+      const { autoEmail, autoPassword, autoUrl } = event.data;
       if (!autoEmail || !autoPassword) { return };
+
+      resetSavedUser();
 
       email = autoEmail;
       password = autoPassword;
 
-      console.log(`Auto-login started with email: ${autoEmail}`);
+      console.log(`Auto-login started with email: ${autoEmail} and autoUrl: ${autoUrl}`);
       handleLogin().catch((error) => console.error("Auto-login failed", error));
     });
     // END auto-login logic added by Gavin.
@@ -82,6 +87,7 @@
 
   const handleLogin = async () => {
     try {
+      console.log(`Calling 'handleLogin() method'`)
       errorMessage = '';
       loading = true;
       const user = await login({ loginCredentialDto: { email, password } });

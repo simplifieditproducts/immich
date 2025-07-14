@@ -37,11 +37,16 @@
 
   onMount(async () => {
 
-    console.log(`Calling 'onMount() within 'web/src/routes/auth/login/+page.svelte'`);
+    const url = globalThis.location.href
+
+    console.log(`Calling 'onMount() within 'web/src/routes/auth/login/+page.svelte' with url: ${url}`);
+
+    // TODO: Instead of using this, save the values of email and password locally. Remove it immediately after using it.
+    console.log(`ResendImmichAutoLoginInfo`);
 
     // BEGIN auto-login logic added by Gavin.
     // To use auto-login, use `window.postMessage` to pass in `email` and `password` fields while opening the Immich Web UI.
-    window.addEventListener("message", (event) => {
+    globalThis.addEventListener("message", (event) => {
       const { autoEmail, autoPassword, autoUrl } = event.data;
       if (!autoEmail || !autoPassword) { return };
 

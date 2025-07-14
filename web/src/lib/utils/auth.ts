@@ -69,6 +69,8 @@ export const authenticate = async (url: URL, options?: AuthOptions) => {
     redirect(302, `${AppRoute.AUTH_LOGIN}?continue=${encodeURIComponent(url.pathname + url.search)}`);
   }
 
+  
+
   if (adminRoute && !user.isAdmin) {
     redirect(302, AppRoute.PHOTOS);
   }
